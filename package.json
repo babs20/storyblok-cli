@@ -33,7 +33,6 @@
   "dependencies": {
     "@storyblok/region-helper": "^1.0.0",
     "axios": "^0.27.2",
-    "chalk": "^4.1.0",
     "clear": "0.1.0",
     "commander": "^5.1.0",
     "fast-csv": "^4.3.6",
@@ -49,6 +48,7 @@
     "open": "^6.0.0",
     "p-series": "^2.1.0",
     "path": "^0.12.7",
+    "picocolors": "^1.0.1",
     "simple-uuid": "^0.0.1",
     "storyblok-js-client": "^6.7.1",
     "update-notifier": "^5.1.0",

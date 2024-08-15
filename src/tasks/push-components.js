@@ -1,6 +1,6 @@
 import axios from 'axios'
 import fs from 'fs'
-import chalk from 'chalk'
+import pc from 'picocolors'
 import PresetsLib from '../utils/presets-lib'
 import lodash from 'lodash'
 const { isEmpty } = lodash
@@ -46,7 +46,7 @@ const getDataFromPath = async (path) => {
       return data
     }
   } catch (err) {
-    console.error(`${chalk.red('X')} Can not load json file from ${path}`)
+    console.error(`${pc.red('X')} Can not load json file from ${path}`)
     return Promise.reject(err)
   }
 }
@@ -72,7 +72,7 @@ const pushComponents = async (api, { source, presetsSource }) => {
 
     return push(api, components, presets)
   } catch (err) {
-    console.error(`${chalk.red('X')} Can not push invalid json - please provide a valid json file`)
+    console.error(`${pc.red('X')} Can not push invalid json - please provide a valid json file`)
     return Promise.reject(new Error('Can not push invalid json - please provide a valid json file'))
   }
 }
@@ -87,7 +87,7 @@ const push = async (api, components, presets = []) => {
         const currentGroup = getGroupByName(componentsGroups, groupName)
         if (!currentGroup.name) {
           try {
-            console.log(`${chalk.blue('-')} Creating the ${groupName} component group...`)
+            console.log(`${pc.blue('-')} Creating the ${groupName} component group...`)
             const newGroup = await api.post('component_groups', {
               component_group: {
                 name: groupName
@@ -99,7 +99,7 @@ const push = async (api, components, presets = []) => {
             })
           } catch (err) {
             console.log(
-              `${chalk.yellow('-')} Components group ${groupName} already exists...`
+              `${pc.yellow('-')} Components group ${groupName} already exists...`
             )
           }
         } else {
@@ -141,7 +141,7 @@ const push = async (api, components, presets = []) => {
 
       if (exists.length > 0) {
         const { id, name } = exists[0]
-        console.log(`${chalk.blue('-')} Updating component ${name}...`)
+        console.log(`${pc.blue('-')} Updating component ${name}...`)
         const componentTarget = await api.get(`components/${id}`)
 
         try {
@@ -166,14 +166,14 @@ const push = async (api, components, presets = []) => {
             component: components[i]
           })
 
-          console.log(`${chalk.green('✓')} Component ${name} has been updated in Storyblok!`)
+          console.log(`${pc.green('✓')} Component ${name} has been updated in Storyblok!`)
         } catch (e) {
-          console.error(`${chalk.red('X')} An error occurred when update component ${name}`)
+          console.error(`${pc.red('X')} An error occurred when update component ${name}`)
           console.error(e.message)
         }
       } else {
         const { name } = components[i]
-        console.log(`${chalk.blue('-')} Creating component ${name}...`)
+        console.log(`${pc.blue('-')} Creating component ${name}...`)
         try {
           const componentRes = await api.post('components', {
             component: components[i]
@@ -192,9 +192,9 @@ const push = async (api, components, presets = []) => {
               }
             }
           }
-          console.log(`${chalk.green('✓')} Component ${name} has been updated in Storyblok!`)
+          console.log(`${pc.green('✓')} Component ${name} has been updated in Storyblok!`)
         } catch (e) {
-          console.error(`${chalk.red('X')} An error occurred when create component`)
+          console.error(`${pc.red('X')} An error occurred when create component`)
           console.error(e.message)
         }
       }
@@ -202,7 +202,7 @@ const push = async (api, components, presets = []) => {
 
     return Promise.resolve(true)
   } catch (e) {
-    console.error(`${chalk.red('X')} An error occurred when load components file from api`)
+    console.error(`${pc.red('X')} An error occurred when load components file from api`)
     return Promise.reject(e.message)
   }
 }

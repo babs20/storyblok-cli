@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import pc from 'picocolors'
 import fs from 'fs-extra'
 import { checkExistenceFilesInRollBackDirectory, urlTofRollbackMigrationFile } from './utils'
 const MIGRATIONS_ROLLBACK_DIRECTORY = `${process.cwd()}/migrations/rollback`
@@ -14,26 +14,26 @@ const MIGRATIONS_ROLLBACK_DIRECTORY = `${process.cwd()}/migrations/rollback`
 const rollbackMigration = async (api, field, component) => {
   if (!fs.existsSync(MIGRATIONS_ROLLBACK_DIRECTORY)) {
     console.log(`
-        ${chalk.red('X')} To execute the rollback-migration command you need to have changed some component with the migrations commands.`
+        ${pc.red('X')} To execute the rollback-migration command you need to have changed some component with the migrations commands.`
     )
     return
   }
 
   console.log(
-    `${chalk.blue('-')} Checking if the rollback files exist`
+    `${pc.blue('-')} Checking if the rollback files exist`
   )
 
   try {
     checkExistenceFilesInRollBackDirectory(MIGRATIONS_ROLLBACK_DIRECTORY, component, field)
       .then(data => {
         if (!data) {
-          return console.log(`${chalk.red('X')} Rollback file for component ${chalk.blue(component)} and field ${chalk.blue(field)} was not found`)
+          return console.log(`${pc.red('X')} Rollback file for component ${pc.blue(component)} and field ${pc.blue(field)} was not found`)
         }
       })
 
     console.log()
     console.log(
-      `${chalk.blue('-')} Starting rollback...`
+      `${pc.blue('-')} Starting rollback...`
     )
     console.log()
 
@@ -42,24 +42,24 @@ const rollbackMigration = async (api, field, component) => {
 
     for (const story of rollbackContent) {
       console.log(
-        `${chalk.blue('-')} Restoring data from "${chalk.blue(story.full_slug)}" ...`
+        `${pc.blue('-')} Restoring data from "${pc.blue(story.full_slug)}" ...`
       )
       await api.put(`stories/${story.id}`, {
         story: { content: story.content },
         force_update: '1'
       })
       console.log(
-        `  ${chalk.blue('-')} ${story.full_slug} data has been restored!`
+        `  ${pc.blue('-')} ${story.full_slug} data has been restored!`
       )
       console.log()
     }
 
     console.log(
-      `${chalk.green('✓')} The roolback-migration was executed with success!`
+      `${pc.green('✓')} The roolback-migration was executed with success!`
     )
     return Promise.resolve({ rollback: true })
   } catch (err) {
-    console.log(`${chalk.red('X')} The rollback-migration command was not successfully executed: ${err}`)
+    console.log(`${pc.red('X')} The rollback-migration command was not successfully executed: ${err}`)
     return Promise.reject(err)
   }
 }

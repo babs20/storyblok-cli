@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import pc from 'picocolors'
 import FormData from 'form-data'
 import axios from 'axios'
 import lodash from 'lodash'
@@ -17,7 +17,7 @@ class PresetsLib {
 
   async createPresets (presets = [], componentId, method = 'post') {
     const presetsSize = presets.length
-    console.log(`${chalk.blue('-')} Pushing ${presetsSize} ${method === 'post' ? 'new' : 'existing'} presets`)
+    console.log(`${pc.blue('-')} Pushing ${presetsSize} ${method === 'post' ? 'new' : 'existing'} presets`)
 
     try {
       for (let i = 0; i < presetsSize; i++) {
@@ -34,7 +34,7 @@ class PresetsLib {
         })
       }
 
-      console.log(`${chalk.green('✓')} ${presetsSize} presets sync`)
+      console.log(`${pc.green('✓')} ${presetsSize} presets sync`)
     } catch (e) {
       console.error('An error ocurred while trying to save the presets ' + e.message)
 
@@ -43,7 +43,7 @@ class PresetsLib {
   }
 
   getComponentPresets (component = {}, presets = []) {
-    console.log(`${chalk.green('-')} Get presets from component ${component.name}`)
+    console.log(`${pc.green('-')} Get presets from component ${component.name}`)
 
     return presets.filter(preset => {
       return preset.component_id === component.id
@@ -51,7 +51,7 @@ class PresetsLib {
   }
 
   async getPresets (spaceId) {
-    console.log(`${chalk.green('-')} Load presets from space #${spaceId}`)
+    console.log(`${pc.green('-')} Load presets from space #${spaceId}`)
 
     try {
       const response = await this.client.get(
@@ -67,7 +67,7 @@ class PresetsLib {
   }
 
   filterPresetsFromTargetComponent (presets, targetPresets) {
-    console.log(chalk.blue('-') + ' Checking target presets to sync...')
+    console.log(pc.blue('-') + ' Checking target presets to sync...')
     const targetPresetsNames = targetPresets.map(preset => preset.name)
     const newPresets = presets.filter(preset => !targetPresetsNames.includes(preset.name))
     const updatePresetsSource = presets.filter(preset => targetPresetsNames.includes(preset.name))
@@ -122,10 +122,10 @@ class PresetsLib {
 
         form.submit(signedRequest.post_url, (err, res) => {
           if (err) {
-            console.log(`${chalk.red('X')} There was an error uploading the image`)
+            console.log(`${pc.red('X')} There was an error uploading the image`)
             return reject(err)
           }
-          console.log(`${chalk.green('✓')} Uploaded ${name} image successfully!`)
+          console.log(`${pc.green('✓')} Uploaded ${name} image successfully!`)
           return resolve(signedRequest.pretty_url)
         })
       })

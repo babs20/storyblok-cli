@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import pc from 'picocolors'
 import inquirer from 'inquirer'
 import { getPathToFile, checkFileExists, getInquirerOptions, createMigrationFile, checkComponentExists, getNameOfMigrationFile } from './utils'
 
@@ -22,13 +22,13 @@ const generateMigration = async (api, component, field) => {
     const fileExists = await checkFileExists(pathToFile)
 
     if (fileExists) {
-      console.log(`${chalk.yellow('!')} The file to migration already exists.`)
+      console.log(`${pc.yellow('!')} The file to migration already exists.`)
 
       const questions = getInquirerOptions('file-exists')
       const answer = await inquirer.prompt(questions)
 
       if (!answer.choice) {
-        console.log(`${chalk.blue('-')} The file will not overwrite`)
+        console.log(`${pc.blue('-')} The file will not overwrite`)
 
         return Promise.resolve({
           fileName,
@@ -39,7 +39,7 @@ const generateMigration = async (api, component, field) => {
 
     await createMigrationFile(fileName, field)
 
-    console.log(`${chalk.green('✓')} File created with success. Check the file ${fileName} in migrations folder`)
+    console.log(`${pc.green('✓')} File created with success. Check the file ${fileName} in migrations folder`)
 
     return Promise.resolve({
       fileName,

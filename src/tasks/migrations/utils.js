@@ -1,7 +1,7 @@
 import onChange from 'on-change'
 import lodash from 'lodash'
 import fs from 'fs-extra'
-import chalk from 'chalk'
+import pc from 'picocolors'
 import { parseError } from '../../utils'
 import migrationTemplate from '../templates/migration-file'
 const { isArray, isPlainObject, has, isEmpty, template, truncate } = lodash
@@ -56,7 +56,7 @@ export const getStoriesByComponent = async (api, componentName) => {
     return stories
   } catch (e) {
     const error = parseError(e)
-    console.error(`${chalk.red('X')} An error ocurred when load the stories filtering by component ${componentName}: ${error.message}`)
+    console.error(`${pc.red('X')} An error ocurred when load the stories filtering by component ${componentName}: ${error.message}`)
 
     return Promise.reject(error.error)
   }
@@ -83,7 +83,7 @@ export const getComponentsFromName = async (api, componentName) => {
     return {}
   } catch (e) {
     const error = parseError(e)
-    console.error(`${chalk.red('X')} An error occurred when loading the components from space: ${error.message}`)
+    console.error(`${pc.red('X')} An error occurred when loading the components from space: ${error.message}`)
 
     return Promise.reject(error.error)
   }
@@ -120,7 +120,7 @@ export const checkFileExists = async (filePath) => fs.pathExists(filePath)
  * @return {Promise<Boolean>}
  */
 export const createMigrationFile = (fileName, field) => {
-  console.log(`${chalk.blue('-')} Creating the migration file in migrations folder`)
+  console.log(`${pc.blue('-')} Creating the migration file in migrations folder`)
 
   // use lodash.template to replace the occurrences of fieldname
   const compile = template(migrationTemplate, {
@@ -162,13 +162,13 @@ export const showMigrationChanges = (path, value, oldValue) => {
     // truncate the string with more than 30 characters
     const _value = truncate(value)
 
-    console.log(`  ${chalk.green('-')} Created field "${chalk.green(path)}" with value "${chalk.green(_value)}"`)
+    console.log(`  ${pc.green('-')} Created field "${pc.green(path)}" with value "${pc.green(_value)}"`)
     return
   }
 
   // It was removed the field
   if (value === undefined) {
-    console.log(`  ${chalk.red('-')} Removed the field "${chalk.red(path)}"`)
+    console.log(`  ${pc.red('-')} Removed the field "${pc.red(path)}"`)
     return
   }
 
@@ -178,7 +178,7 @@ export const showMigrationChanges = (path, value, oldValue) => {
     const _value = truncate(value)
     const _oldValue = truncate(oldValue)
 
-    console.log(`  ${chalk.blue('-')} Updated field "${chalk.blue(path)}" from "${chalk.blue(_oldValue)}" to "${chalk.blue(_value)}"`)
+    console.log(`  ${pc.blue('-')} Updated field "${pc.blue(path)}" from "${pc.blue(_oldValue)}" to "${pc.blue(_value)}"`)
   }
 }
 
@@ -278,10 +278,10 @@ export const createRollbackFile = async (stories, component, field) => {
 
     fs.writeFile(url, JSON.stringify(stories, null, 2), { flag: 'a' }, (error) => {
       if (error) {
-        console.log(`${chalk.red('X')} The rollback file could not be created: ${error}`)
+        console.log(`${pc.red('X')} The rollback file could not be created: ${error}`)
         return error
       }
-      console.log(`${chalk.green('✓')} The rollback file has been created in migrations/rollback/!`)
+      console.log(`${pc.green('✓')} The rollback file has been created in migrations/rollback/!`)
     })
     return Promise.resolve({
       component: component,
@@ -303,7 +303,7 @@ export const createRollbackFile = async (stories, component, field) => {
 export const checkExistenceFilesInRollBackDirectory = (path, component, field) => {
   if (!fs.existsSync(path)) {
     console.log(`
-        ${chalk.red('X')} The path for which the rollback files should be contained does not exist`
+        ${pc.red('X')} The path for which the rollback files should be contained does not exist`
     )
     return Promise.reject(new Error({ error: 'Path not found' }))
   }

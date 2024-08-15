@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import pc from 'picocolors'
 import lodash from 'lodash'
 import SyncComponentGroups from './component-groups'
 import { findByProperty } from '../../utils'
@@ -35,7 +35,7 @@ class SyncComponents {
       this.sourceComponentGroups = componentsGroupsSynced.source
       this.targetComponentGroups = componentsGroupsSynced.target
 
-      console.log(`${chalk.green('-')} Syncing components...`)
+      console.log(`${pc.green('-')} Syncing components...`)
       // load data from target and source spaces
       this.sourceComponents = await this.getComponents(this.sourceSpaceId)
       this.targetComponents = await this.getComponents(this.targetSpaceId)
@@ -43,14 +43,14 @@ class SyncComponents {
       this.sourcePresets = await this.presetsLib.getPresets(this.sourceSpaceId)
 
       console.log(
-        `${chalk.blue('-')} In source space #${this.sourceSpaceId}, it were found: `
+        `${pc.blue('-')} In source space #${this.sourceSpaceId}, it were found: `
       )
       console.log(`  - ${this.sourcePresets.length} presets`)
       console.log(`  - ${this.sourceComponentGroups.length} groups`)
       console.log(`  - ${this.sourceComponents.length} components`)
 
       console.log(
-        `${chalk.blue('-')} In target space #${this.targetSpaceId}, it were found: `
+        `${pc.blue('-')} In target space #${this.targetSpaceId}, it were found: `
       )
       console.log(`  - ${this.targetComponentGroups.length} groups`)
       console.log(`  - ${this.targetComponents.length} components`)
@@ -64,7 +64,7 @@ class SyncComponents {
       console.log()
 
       const component = this.sourceComponents[i]
-      console.log(chalk.blue('-') + ` Processing component ${component.name}`)
+      console.log(pc.blue('-') + ` Processing component ${component.name}`)
 
       const componentPresets = this.presetsLib.getComponentPresets(component, this.sourcePresets)
 
@@ -75,7 +75,7 @@ class SyncComponents {
 
       if (this.componentsGroups && !this.componentsGroups.includes(sourceGroupUuid)) {
         console.log(
-          chalk.yellow('-') +
+          pc.yellow('-') +
             ` Component ${component.name} does not belong to the ${this.componentsGroups} group(s).`
         )
         continue
@@ -96,7 +96,7 @@ class SyncComponents {
         )
 
         console.log(
-          `${chalk.yellow('-')} Linking the component to the group ${targetGroupData.name}`
+          `${pc.yellow('-')} Linking the component to the group ${targetGroupData.name}`
         )
         component.component_group_uuid = targetGroupData.uuid
       }
@@ -113,7 +113,7 @@ class SyncComponents {
               const response = await this.createComponentInternalTag(this.targetSpaceId, tag);
               processedInternalTagsIds.push(response.id);
             } catch (e) {
-              console.error(chalk.red("X") + ` Internal tag ${tag} creation failed: ${e.message}`);
+              console.error(pc.red("X") + ` Internal tag ${tag} creation failed: ${e.message}`);
             }
           } else {
             processedInternalTagsIds.push(existingTag.id);
@@ -132,7 +132,7 @@ class SyncComponents {
           componentData
         )
 
-        console.log(chalk.green('✓') + ` Component ${component.name} created`)
+        console.log(pc.green('✓') + ` Component ${component.name} created`)
 
         if (componentPresets.length) {
           await this.presetsLib.createPresets(componentPresets, componentCreated.id)
@@ -140,7 +140,7 @@ class SyncComponents {
       } catch (e) {
         if ((e.response && e.response.status) || e.status === 422) {
           console.log(
-            `${chalk.yellow('-')} Component ${component.name} already exists, updating it...`
+            `${pc.yellow('-')} Component ${component.name} already exists, updating it...`
           )
 
           const componentTarget = this.getTargetComponent(component.name)
@@ -151,7 +151,7 @@ class SyncComponents {
             componentData,
             componentTarget
           )
-          console.log(chalk.green('✓') + ` Component ${component.name} synced`)
+          console.log(pc.green('✓') + ` Component ${component.name} synced`)
 
           const presetsToSave = this.presetsLib.filterPresetsFromTargetComponent(
             componentPresets || [],
@@ -166,9 +166,9 @@ class SyncComponents {
             await this.presetsLib.createPresets(presetsToSave.updatePresets, componentTarget.id, 'put')
           }
 
-          console.log(chalk.green('✓') + ' Presets in sync')
+          console.log(pc.green('✓') + ' Presets in sync')
         } else {
-          console.error(chalk.red('X') + ` Component ${component.name} sync failed: ${e.message}`)
+          console.error(pc.red('X') + ` Component ${component.name} sync failed: ${e.message}`)
         }
       }
     }
@@ -176,7 +176,7 @@ class SyncComponents {
 
   getComponents (spaceId) {
     console.log(
-      `${chalk.green('-')} Load components from space #${spaceId}`
+      `${pc.green('-')} Load components from space #${spaceId}`
     )
 
     return this.client.get(`spaces/${spaceId}/components`)

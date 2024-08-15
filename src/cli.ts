@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 //@ts-nocheck
 import commander from "commander";
-import chalk from "chalk";
+import pc from "picocolors";
 import clear from "clear";
 import figlet from "figlet";
 import inquirer from "inquirer";
@@ -23,7 +23,7 @@ const program = new commander.Command();
 const allRegionsText = ALL_REGIONS.join(", ");
 
 clear();
-console.log(chalk.cyan(figlet.textSync("storyblok")));
+console.log(pc.cyan(figlet.textSync("storyblok")));
 console.log();
 console.log();
 console.log("Hi, welcome to the Storyblok CLI");
@@ -55,7 +55,7 @@ program
 
     if (api.isAuthorized()) {
       console.log(
-        chalk.green("✓") +
+        pc.green("✓") +
           " The user has been already logged. If you want to change the logged user, you must logout and login again"
       );
       return;
@@ -63,8 +63,7 @@ program
 
     if (!isRegion(region)) {
       console.log(
-        chalk.red("X") +
-          `The provided region ${region} is not valid. Please use one of the following: ${allRegionsText}`
+        pc.red("X") + `The provided region ${region} is not valid. Please use one of the following: ${allRegionsText}`
       );
       return;
     }
@@ -73,7 +72,7 @@ program
       await api.processLogin(token, region);
       process.exit(0);
     } catch (e) {
-      console.log(chalk.red("X") + " An error occurred when logging the user: " + e.message);
+      console.log(pc.red("X") + " An error occurred when logging the user: " + e.message);
       process.exit(1);
     }
   });
@@ -86,14 +85,14 @@ program
     if (api.isAuthorized()) {
       try {
         const user = await api.getUser();
-        console.log(chalk.green("✓") + ` Hi ${user.friendly_name}, you current logged in with: ${creds.get().email}`);
+        console.log(pc.green("✓") + ` Hi ${user.friendly_name}, you current logged in with: ${creds.get().email}`);
       } catch (e) {
-        console.log(chalk.red("X") + ` Please check if your current region matches your user's region: ${e.message}.`);
+        console.log(pc.red("X") + ` Please check if your current region matches your user's region: ${e.message}.`);
       } finally {
         process.exit(0);
       }
     }
-    console.log(chalk.red("X") + " There is currently no user logged.");
+    console.log(pc.red("X") + " There is currently no user logged.");
   });
 
 // logout
@@ -106,7 +105,7 @@ program
       console.log("Logged out successfully! Token has been removed from .netrc file.");
       process.exit(0);
     } catch (e) {
-      console.log(chalk.red("X") + " An error occurred when logging out the user: " + e.message);
+      console.log(pc.red("X") + " An error occurred when logging out the user: " + e.message);
       process.exit(1);
     }
   });
@@ -116,10 +115,10 @@ program
   .command("pull-languages")
   .description("Download your space's languages schema as json")
   .action(async () => {
-    console.log(`${chalk.blue("-")} Executing pull-languages task`);
+    console.log(`${pc.blue("-")} Executing pull-languages task`);
     const space = program.space;
     if (!space) {
-      console.log(chalk.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
+      console.log(pc.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
       process.exit(0);
     }
 
@@ -131,7 +130,7 @@ program
       api.setSpaceId(space);
       await tasks.pullLanguages(api, { space });
     } catch (e) {
-      console.log(chalk.red("X") + " An error occurred when executing the pull-languages task: " + e.message);
+      console.log(pc.red("X") + " An error occurred when executing the pull-languages task: " + e.message);
       process.exit(1);
     }
   });
@@ -145,11 +144,11 @@ program
   .option("-ppn, --prefix-presets-names", "Prefixes the names of presets with the name of the components")
   .description("Download your space's components schema as json")
   .action(async (options) => {
-    console.log(`${chalk.blue("-")} Executing pull-components task`);
+    console.log(`${pc.blue("-")} Executing pull-components task`);
     const space = program.space;
     const { separateFiles, path, prefixPresetsNames } = options;
     if (!space) {
-      console.log(chalk.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
+      console.log(pc.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
       process.exit(0);
     }
 
@@ -175,12 +174,12 @@ program
     "Download your space's components schema as json. The source parameter can be a URL to your JSON file or a path to it"
   )
   .action(async (source, options) => {
-    console.log(`${chalk.blue("-")} Executing push-components task`);
+    console.log(`${pc.blue("-")} Executing push-components task`);
     const space = program.space;
     const presetsSource = options.presetsSource;
 
     if (!space) {
-      console.log(chalk.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
+      console.log(pc.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
       process.exit(0);
     }
 
@@ -201,10 +200,10 @@ program
   .command("delete-component <component>")
   .description("Delete a single component on your space.")
   .action(async (component) => {
-    console.log(`${chalk.blue("-")} Executing delete-component task`);
+    console.log(`${pc.blue("-")} Executing delete-component task`);
     const space = program.space;
     if (!space) {
-      console.log(chalk.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
+      console.log(pc.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
       process.exit(0);
     }
     try {
@@ -215,7 +214,7 @@ program
       api.setSpaceId(space);
       await tasks.deleteComponent(api, { comp: component });
     } catch (e) {
-      console.log(chalk.red("X") + " An error occurred when executing the delete-component task: " + e.message);
+      console.log(pc.red("X") + " An error occurred when executing the delete-component task: " + e.message);
       process.exit(1);
     }
   });
@@ -227,10 +226,10 @@ program
   .option("-r, --reverse", "Delete all components in your space that do not appear in your source.", false)
   .option("--dryrun", "Does not perform any delete changes on your space.")
   .action(async (source, options) => {
-    console.log(`${chalk.blue("-")} Executing delete-components task`);
+    console.log(`${pc.blue("-")} Executing delete-components task`);
     const space = program.space;
     if (!space) {
-      console.log(chalk.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
+      console.log(pc.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
       process.exit(0);
     }
     try {
@@ -241,7 +240,7 @@ program
       api.setSpaceId(space);
       await tasks.deleteComponents(api, { source, dryRun: !!options.dryrun, reversed: !!options.reverse });
     } catch (e) {
-      console.log(chalk.red("X") + " An error occurred when executing the delete-component task: " + e.message);
+      console.log(pc.red("X") + " An error occurred when executing the delete-component task: " + e.message);
       process.exit(1);
     }
   });
@@ -251,7 +250,7 @@ program
   .command(COMMANDS.SCAFFOLD + " <name>")
   .description("Scaffold <name> component")
   .action(async (name) => {
-    console.log(`${chalk.blue("-")} Scaffolding a component\n`);
+    console.log(`${pc.blue("-")} Scaffolding a component\n`);
 
     if (api.isAuthorized()) {
       api.accessToken = creds.get().token || null;
@@ -259,14 +258,12 @@ program
 
     try {
       await tasks.scaffold(api, name, program.space);
-      console.log(chalk.green("✓") + " Generated files: ");
-      console.log(chalk.green("✓") + " - views/components/_" + name + ".liquid");
-      console.log(chalk.green("✓") + " - source/scss/components/below/_" + name + ".scss");
+      console.log(pc.green("✓") + " Generated files: ");
+      console.log(pc.green("✓") + " - views/components/_" + name + ".liquid");
+      console.log(pc.green("✓") + " - source/scss/components/below/_" + name + ".scss");
       process.exit(0);
     } catch (e) {
-      console.log(
-        chalk.red("X") + " An error occurred when executing operations to create the component: " + e.message
-      );
+      console.log(pc.red("X") + " An error occurred when executing operations to create the component: " + e.message);
       process.exit(1);
     }
   });
@@ -276,7 +273,7 @@ program
   .command(COMMANDS.SELECT)
   .description("Usage to kickstart a boilerplate, fieldtype or theme")
   .action(async () => {
-    console.log(`${chalk.blue("-")} Select a boilerplate, fieldtype or theme to initialize\n`);
+    console.log(`${pc.blue("-")} Select a boilerplate, fieldtype or theme to initialize\n`);
 
     try {
       const questions = getQuestions("select");
@@ -284,7 +281,7 @@ program
 
       await lastStep(answers);
     } catch (e) {
-      console.error(chalk.red("X") + " An error ocurred when execute the select command: " + e.message);
+      console.error(pc.red("X") + " An error ocurred when execute the select command: " + e.message);
       process.exit(1);
     }
   });
@@ -307,7 +304,7 @@ program
   .option("--components-groups <UUIDs>", "Synchronize components based on their group UUIDs separated by commas")
   .option("--components-full-sync", "Synchronize components by overriding any property from source to target")
   .action(async (options) => {
-    console.log(`${chalk.blue("-")} Sync data between spaces\n`);
+    console.log(`${pc.blue("-")} Sync data between spaces\n`);
 
     try {
       if (!api.isAuthorized()) {
@@ -350,7 +347,7 @@ program
         _componentsFullSync,
       });
 
-      console.log("\n" + chalk.green("✓") + " Sync data between spaces successfully completed");
+      console.log("\n" + pc.green("✓") + " Sync data between spaces successfully completed");
     } catch (e) {
       errorHandler(e, COMMANDS.SYNC);
     }
@@ -371,7 +368,7 @@ program
       const answers = await inquirer.prompt(questions);
       await tasks.quickstart(api, answers, space);
     } catch (e) {
-      console.log(chalk.red("X") + " An error ocurred when execute quickstart operations: " + e.message);
+      console.log(pc.red("X") + " An error ocurred when execute quickstart operations: " + e.message);
       process.exit(1);
     }
   });
@@ -387,11 +384,11 @@ program
 
     const space = program.space;
     if (!space) {
-      console.log(chalk.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
+      console.log(pc.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
       process.exit(1);
     }
 
-    console.log(`${chalk.blue("-")} Creating the migration file in ./migrations/change_${component}_${field}.js\n`);
+    console.log(`${pc.blue("-")} Creating the migration file in ./migrations/change_${component}_${field}.js\n`);
 
     try {
       if (!api.isAuthorized()) {
@@ -401,7 +398,7 @@ program
       api.setSpaceId(space);
       await tasks.generateMigration(api, component, field);
     } catch (e) {
-      console.log(chalk.red("X") + " An error ocurred when generate the migration file: " + e.message);
+      console.log(pc.red("X") + " An error ocurred when generate the migration file: " + e.message);
       process.exit(1);
     }
   });
@@ -423,19 +420,17 @@ program
 
     const space = program.space;
     if (!space) {
-      console.log(chalk.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
+      console.log(pc.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
       process.exit(1);
     }
 
     const publishOptionsAvailable = ["all", "published", "published-with-changes"];
     if (publish && !publishOptionsAvailable.includes(publish)) {
-      console.log(
-        chalk.red("X") + " Please provide a correct publish option: all, published, or published-with-changes"
-      );
+      console.log(pc.red("X") + " Please provide a correct publish option: all, published, or published-with-changes");
       process.exit(1);
     }
 
-    console.log(`${chalk.blue("-")} Processing the migration ./migrations/change_${component}_${field}.js\n`);
+    console.log(`${pc.blue("-")} Processing the migration ./migrations/change_${component}_${field}.js\n`);
 
     try {
       if (!api.isAuthorized()) {
@@ -445,7 +440,7 @@ program
       api.setSpaceId(space);
       await tasks.runMigration(api, component, field, { isDryrun, publish, publishLanguages });
     } catch (e) {
-      console.log(chalk.red("X") + " An error ocurred when run the migration file: " + e.message);
+      console.log(pc.red("X") + " An error ocurred when run the migration file: " + e.message);
       process.exit(1);
     }
   });
@@ -460,7 +455,7 @@ program
     const component = options.component || "";
     const space = program.space;
     if (!space) {
-      console.log(chalk.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
+      console.log(pc.red("X") + " Please provide the space as argument --space YOUR_SPACE_ID.");
       process.exit(1);
     }
 
@@ -473,7 +468,7 @@ program
 
       await tasks.rollbackMigration(api, field, component);
     } catch (e) {
-      console.log(chalk.red("X") + " An error ocurred when run rollback-migration: " + e.message);
+      console.log(pc.red("X") + " An error ocurred when run rollback-migration: " + e.message);
       process.exit(1);
     }
   });
@@ -491,7 +486,7 @@ program
 
       await tasks.listSpaces(api, region);
     } catch (e) {
-      console.log(chalk.red("X") + " An error ocurred to listing spaces: " + e.message);
+      console.log(pc.red("X") + " An error ocurred to listing spaces: " + e.message);
       process.exit(1);
     }
   });
@@ -513,16 +508,16 @@ program
       }
 
       if (!space) {
-        console.log(chalk.red("X") + " Please provide the space as argument --space <SPACE_ID>.");
+        console.log(pc.red("X") + " Please provide the space as argument --space <SPACE_ID>.");
         return;
       }
 
       api.setSpaceId(space);
       await tasks.importFiles(api, options);
 
-      console.log(`${chalk.green("✓")} The import process was executed with success!`);
+      console.log(`${pc.green("✓")} The import process was executed with success!`);
     } catch (e) {
-      console.log(chalk.red("X") + " An error ocurred to import data : " + e.message);
+      console.log(pc.red("X") + " An error ocurred to import data : " + e.message);
       process.exit(1);
     }
   });
@@ -534,7 +529,7 @@ program
   .option("--by-slug <SLUG>", "Delete datasources by slug")
   .option("--by-name <name>", "Delete datasources by name")
   .action(async (options) => {
-    console.log(`${chalk.blue("-")} Executing ${COMMANDS.DELETE_DATASOURCES} task`);
+    console.log(`${pc.blue("-")} Executing ${COMMANDS.DELETE_DATASOURCES} task`);
 
     const { spaceId, bySlug, byName } = options;
 
@@ -578,7 +573,7 @@ program
   )
   .option("--customTypeParser, --customFieldTypesParserPath <PATH>", "Path to the parser file for Custom Field Types")
   .action((options) => {
-    console.log(`${chalk.blue("-")} Executing ${COMMANDS.GENERATE_TYPESCRIPT_TYPEDEFS} task`);
+    console.log(`${pc.blue("-")} Executing ${COMMANDS.GENERATE_TYPESCRIPT_TYPEDEFS} task`);
 
     const {
       sourceFilePaths,
@@ -613,11 +608,11 @@ function errorHandler(e, command) {
   if (/404/.test(e.message)) {
     const allRegionsButDefault = ALL_REGIONS.filter((region) => region !== EU_CODE).join(" ,");
     console.log(
-      chalk.yellow("/!\\") +
+      pc.yellow("/!\\") +
         ` If your space was not created under ${EU_CODE} region, you must provide the region (${allRegionsButDefault}) upon login.`
     );
   } else {
-    console.log(chalk.red("X") + " An error occurred when executing the " + command + " task: " + e || e.message);
+    console.log(pc.red("X") + " An error occurred when executing the " + command + " task: " + e || e.message);
   }
   process.exit(1);
 }

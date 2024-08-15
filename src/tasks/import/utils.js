@@ -1,6 +1,6 @@
 import csvReader from 'fast-csv'
 import xmlConverter from 'xml-js'
-import chalk from 'chalk'
+import pc from 'picocolors'
 import path from 'path'
 import fs from 'fs'
 import lodash from 'lodash'
@@ -31,16 +31,16 @@ export const sendContent = async (api, contents) => {
   for (const story of contents) {
     try {
       console.log(
-        `${chalk.blue('-')} Creating the story ${story.name}(${story.slug})`
+        `${pc.blue('-')} Creating the story ${story.name}(${story.slug})`
       )
       await api.post('stories', { story })
 
       console.log(
-        `${chalk.green('✓')} ${story.name}(${story.slug}) has been created`
+        `${pc.green('✓')} ${story.name}(${story.slug}) has been created`
       )
     } catch (e) {
       console.log(
-        `${chalk.red('X')} An error ocurred when creating the story ${story.name}(${story.slug}): ${e.message}`
+        `${pc.red('X')} An error ocurred when creating the story ${story.name}(${story.slug}): ${e.message}`
       )
     }
 
@@ -69,7 +69,7 @@ const removeJsonTextAttribute = (value, parentElement) => {
 export const csvParser = (data, typeOfContent, folderID = 0, delimiter = ';') => {
   return new Promise((resolve, reject) => {
     console.log()
-    console.log(`${chalk.blue('-')} Reading CSV file... `)
+    console.log(`${pc.blue('-')} Reading CSV file... `)
     console.log()
 
     const story = []
@@ -133,7 +133,7 @@ const xmlFactoryOfStories = (line, typeOfContent, folderID) => {
 export const xmlParser = async (data, typeOfContent, folderID = 0) => {
   return new Promise((resolve, reject) => {
     console.log()
-    console.log(`${chalk.blue('-')} Reading XML file... `)
+    console.log(`${pc.blue('-')} Reading XML file... `)
     console.log()
 
     try {
@@ -166,7 +166,7 @@ export const xmlParser = async (data, typeOfContent, folderID = 0) => {
  */
 export const jsonParser = async (data, typeOfContent, folderID = 0) => {
   console.log()
-  console.log(`${chalk.blue('-')} Reading JSON file... `)
+  console.log(`${pc.blue('-')} Reading JSON file... `)
   console.log()
 
   const copyData = JSON.parse(data)

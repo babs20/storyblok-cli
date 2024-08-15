@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import pc from 'picocolors'
 import { ALL_REGIONS, getRegionName, CN_CODE } from '@storyblok/region-helper'
 
 /**
@@ -11,10 +11,10 @@ const listSpaces = async (api, currentRegion) => {
   const isChinaEnv = currentRegion === CN_CODE
 
   console.log()
-  console.log(chalk.green('✓') + ' Loading spaces...')
+  console.log(pc.green('✓') + ' Loading spaces...')
 
   if (!api) {
-    console.log(chalk.red('X') + 'Api instance is required to make the request')
+    console.log(pc.red('X') + 'Api instance is required to make the request')
     return []
   }
 
@@ -24,10 +24,10 @@ const listSpaces = async (api, currentRegion) => {
       .catch(err => Promise.reject(err))
 
     if (!spaces) {
-      console.log(chalk.red('X') + ' No spaces were found for this user ')
+      console.log(pc.red('X') + ' No spaces were found for this user ')
       return []
     }
-    console.log(chalk.blue(' -') + ' Spaces From China region:')
+    console.log(pc.blue(' -') + ' Spaces From China region:')
 
     spaces.map(space => {
       console.log(`    ${space.name} (id: ${space.id})`)
@@ -47,12 +47,12 @@ const listSpaces = async (api, currentRegion) => {
         .catch(err => Promise.reject(err)))
     }
     if (!spacesList) {
-      console.log(chalk.red('X') + ' No spaces were found for this user ')
+      console.log(pc.red('X') + ' No spaces were found for this user ')
       return []
     }
     spacesList.forEach(region => {
       console.log()
-      console.log(`${chalk.blue(' -')} Spaces From ${getRegionName(region.key)} region:`)
+      console.log(`${pc.blue(' -')} Spaces From ${getRegionName(region.key)} region:`)
       region.res.forEach((space) => {
         console.log(`    ${space.name} (id: ${space.id})`)
       })

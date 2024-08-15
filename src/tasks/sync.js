@@ -1,5 +1,5 @@
 import pSeries from 'p-series'
-import chalk from 'chalk'
+import pc from 'picocolors'
 import SyncComponents from './sync-commands/components'
 import SyncDatasources from './sync-commands/datasources'
 import { capitalize } from '../utils'
@@ -10,7 +10,7 @@ const SyncSpaces = {
 
   init (options) {
     const { api } = options
-    console.log(chalk.green('✓') + ' Loading options')
+    console.log(pc.green('✓') + ' Loading options')
     this.client = api.getClient()
     this.sourceSpaceId = options.source
     this.targetSpaceId = options.target
@@ -71,12 +71,12 @@ const SyncSpaces = {
     }
 
     if (targetContent) {
-      console.log(`${chalk.yellow('-')} ${contentTypeName} ${contentName} already exists`)
+      console.log(`${pc.yellow('-')} ${contentTypeName} ${contentName} already exists`)
       createdStory = await this.client.put(`spaces/${this.targetSpaceId}/stories/${targetContent.id}`, payload)
-      console.log(`${chalk.green('✓')} ${contentTypeName} ${targetContent.full_slug} updated`)
+      console.log(`${pc.green('✓')} ${contentTypeName} ${targetContent.full_slug} updated`)
     } else {
       createdStory = await this.client.post(`spaces/${this.targetSpaceId}/stories`, payload)
-      console.log(`${chalk.green('✓')} ${contentTypeName} ${sourceContent.full_slug} created`)
+      console.log(`${pc.green('✓')} ${contentTypeName} ${sourceContent.full_slug} created`)
     }
 
     createdStory = createdStory.data.story
@@ -89,7 +89,7 @@ const SyncSpaces = {
   },
 
   async syncStories () {
-    console.log(chalk.green('✓') + ' Syncing stories...')
+    console.log(pc.green('✓') + ' Syncing stories...')
 
     const folderMapping = { ...await this.getTargetFolders() }
 
@@ -100,7 +100,7 @@ const SyncSpaces = {
     })
 
     for (const story of allStories) {
-      console.log(chalk.green('✓') + ' Starting update ' + story.full_slug)
+      console.log(pc.green('✓') + ' Starting update ' + story.full_slug)
 
       const { data } = await this.client.get(`spaces/${this.sourceSpaceId}/stories/${story.id}`)
       const sourceStory = data.story
@@ -114,7 +114,7 @@ const SyncSpaces = {
         if (folderMapping[folderSlug]) {
           folderId = folderMapping[folderSlug]
         } else {
-          console.error(`${chalk.red('X')} The folder does not exist ${folderSlug}`)
+          console.error(`${pc.red('X')} The folder does not exist ${folderSlug}`)
           continue
         }
       }
@@ -128,7 +128,7 @@ const SyncSpaces = {
         await this.updateStoriesAndFolders(storyData, existingStory, sourceStory)
       } catch (e) {
         console.error(
-          chalk.red('X') + ` Story ${story.name} Sync failed: ${e.message}`
+          pc.red('X') + ` Story ${story.name} Sync failed: ${e.message}`
         )
         console.log(e)
       }
@@ -138,7 +138,7 @@ const SyncSpaces = {
   },
 
   async syncFolders () {
-    console.log(chalk.green('✓') + ' Syncing folders...')
+    console.log(pc.green('✓') + ' Syncing folders...')
 
     const sourceFolders = await this.client.getAll(`spaces/${this.sourceSpaceId}/stories`, {
       folder_only: 1,
@@ -178,7 +178,7 @@ const SyncSpaces = {
         await this.updateStoriesAndFolders(folderData, existingFolder, folder, true)
       } catch (e) {
         console.error(
-          chalk.red('X') + ` Folder ${folder.name} Sync failed: ${e.message}`
+          pc.red('X') + ` Folder ${folder.name} Sync failed: ${e.message}`
         )
         console.log(e)
       }
@@ -186,7 +186,7 @@ const SyncSpaces = {
   },
 
   async syncRoles () {
-    console.log(chalk.green('✓') + ' Syncing roles...')
+    console.log(pc.green('✓') + ' Syncing roles...')
     const existingFolders = await this.client.getAll(`spaces/${this.targetSpaceId}/stories`, {
       folder_only: 1,
       sort_by: 'slug:asc'
@@ -224,7 +224,7 @@ const SyncSpaces = {
           space_role: spaceRole
         })
       }
-      console.log(chalk.green('✓') + ` Role ${spaceRole.role} synced`)
+      console.log(pc.green('✓') + ` Role ${spaceRole.role} synced`)
     }
   },
 
@@ -241,7 +241,7 @@ const SyncSpaces = {
       await syncComponentsInstance.sync()
     } catch (e) {
       console.error(
-        chalk.red('X') + ` Sync failed: ${e.message}`
+        pc.red('X') + ` Sync failed: ${e.message}`
       )
       console.log(e)
 
@@ -260,7 +260,7 @@ const SyncSpaces = {
       await syncDatasourcesInstance.sync()
     } catch (e) {
       console.error(
-        chalk.red('X') + ` Datasources Sync failed: ${e.message}`
+        pc.red('X') + ` Datasources Sync failed: ${e.message}`
       )
       console.log(e)
 

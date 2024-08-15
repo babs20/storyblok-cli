@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import pc from 'picocolors'
 
 /**
  * @method deleteDatasources
@@ -17,7 +17,7 @@ const deleteDatasources = async (api, options) => {
       const filteredSlugs = datasources.map(obj => obj.slug)
       const formattedSlugs = filteredSlugs.join(', ')
 
-      console.log(`${chalk.blue('-')} Datasources where slug starts with ${bySlug}: ${formattedSlugs}`)
+      console.log(`${pc.blue('-')} Datasources where slug starts with ${bySlug}: ${formattedSlugs}`)
     }
 
     if (byName) {
@@ -25,15 +25,15 @@ const deleteDatasources = async (api, options) => {
       const filteredNames = datasources.map(obj => obj.name)
       const formattedNames = filteredNames.join(', ')
 
-      console.log(`${chalk.blue('-')} Datasources where name starts with ${byName}: ${formattedNames}`)
+      console.log(`${pc.blue('-')} Datasources where name starts with ${byName}: ${formattedNames}`)
     }
 
     for (const datasource of datasources) {
-      console.log(`${chalk.blue('-')} Deleting ${datasource.name}`)
+      console.log(`${pc.blue('-')} Deleting ${datasource.name}`)
       await api.deleteDatasource(datasource.id)
     }
   } catch (e) {
-    console.error(`${chalk.red('X')} An error ocurred in delete-components task when deleting a datasource`)
+    console.error(`${pc.red('X')} An error ocurred in delete-components task when deleting a datasource`)
     return Promise.reject(new Error(e))
   }
 }

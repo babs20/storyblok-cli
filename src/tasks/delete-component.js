@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import pc from 'picocolors'
 import { getComponentsFromName } from './migrations/utils'
 
 /**
@@ -23,9 +23,9 @@ const deleteComponent = async (api, { comp, dryrun = false }) => {
     if (!dryrun) {
       await api.delete(`components/${component.id}`)
     }
-    console.log(chalk.green('✓') + ' Component ' + chalk.blue(component.name) + ' deleted.')
+    console.log(pc.green('✓') + ' Component ' + pc.blue(component.name) + ' deleted.')
   } catch (e) {
-    console.error(`${chalk.red('X')} An error occurred in delete-component task.`)
+    console.error(`${pc.red('X')} An error occurred in delete-component task.`)
     return Promise.reject(new Error(e))
   }
 }

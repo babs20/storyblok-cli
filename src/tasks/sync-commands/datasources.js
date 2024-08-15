@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import pc from 'picocolors'
 import UUID from 'simple-uuid'
 import api from '../../utils/api'
 
@@ -21,12 +21,12 @@ class SyncDatasources {
       this.sourceDatasources = await this.client.getAll(`spaces/${this.sourceSpaceId}/datasources`)
 
       console.log(
-        `${chalk.blue('-')} In source space #${this.sourceSpaceId}: `
+        `${pc.blue('-')} In source space #${this.sourceSpaceId}: `
       )
       console.log(`  - ${this.sourceDatasources.length} datasources`)
 
       console.log(
-        `${chalk.blue('-')} In target space #${this.targetSpaceId}: `
+        `${pc.blue('-')} In target space #${this.targetSpaceId}: `
       )
       console.log(`  - ${this.targetDatasources.length} datasources`)
     } catch (err) {
@@ -35,7 +35,7 @@ class SyncDatasources {
       return Promise.reject(err)
     }
 
-    console.log(chalk.green('-') + ' Syncing datasources...')
+    console.log(pc.green('-') + ' Syncing datasources...')
     await this.addDatasources()
     await this.updateDatasources()
   }
@@ -120,13 +120,13 @@ class SyncDatasources {
     const datasourcesToAdd = this.sourceDatasources.filter(d => !this.targetDatasources.map(td => td.slug).includes(d.slug))
     if (datasourcesToAdd.length) {
       console.log(
-        `${chalk.green('-')} Adding new datasources to target space #${this.targetSpaceId}...`
+        `${pc.green('-')} Adding new datasources to target space #${this.targetSpaceId}...`
       )
     }
 
     for (let i = 0; i < datasourcesToAdd.length; i++) {
       try {
-        console.log(`  ${chalk.green('-')} Creating datasource ${datasourcesToAdd[i].name} (${datasourcesToAdd[i].slug})`)
+        console.log(`  ${pc.green('-')} Creating datasource ${datasourcesToAdd[i].name} (${datasourcesToAdd[i].slug})`)
         /* Create the datasource */
         const newDatasource = await this.client.post(`spaces/${this.targetSpaceId}/datasources`, {
           name: datasourcesToAdd[i].name,
@@ -135,22 +135,22 @@ class SyncDatasources {
 
         if (datasourcesToAdd[i].dimensions.length) {
           console.log(
-            `    ${chalk.blue('-')} Creating dimensions...`
+            `    ${pc.blue('-')} Creating dimensions...`
           )
           const { data } = await this.createDatasourcesDimensions(datasourcesToAdd[i].dimensions, newDatasource.data.datasource)
           await this.syncDatasourceEntries(datasourcesToAdd[i].id, newDatasource.data.datasource.id)
           console.log(
-            `    ${chalk.blue('-')} Sync dimensions values...`
+            `    ${pc.blue('-')} Sync dimensions values...`
           )
           await this.syncDatasourceDimensionsValues(datasourcesToAdd[i], data.datasource)
-          console.log(`  ${chalk.green('✓')} Created datasource ${datasourcesToAdd[i].name}`)
+          console.log(`  ${pc.green('✓')} Created datasource ${datasourcesToAdd[i].name}`)
         } else {
           await this.syncDatasourceEntries(datasourcesToAdd[i].id, newDatasource.data.datasource.id)
-          console.log(`  ${chalk.green('✓')} Created datasource ${datasourcesToAdd[i].name}`)
+          console.log(`  ${pc.green('✓')} Created datasource ${datasourcesToAdd[i].name}`)
         }
       } catch (err) {
         console.error(
-          `${chalk.red('X')} Datasource ${datasourcesToAdd[i].name} creation failed: ${err.response.data.error || err.message}`
+          `${pc.red('X')} Datasource ${datasourcesToAdd[i].name} creation failed: ${err.response.data.error || err.message}`
         )
       }
     }
@@ -160,7 +160,7 @@ class SyncDatasources {
     const datasourcesToUpdate = this.targetDatasources.filter(d => this.sourceDatasources.map(sd => sd.slug).includes(d.slug))
     if (datasourcesToUpdate.length) {
       console.log(
-        `${chalk.green('-')} Updating datasources In target space #${this.targetSpaceId}...`
+        `${pc.green('-')} Updating datasources In target space #${this.targetSpaceId}...`
       )
     }
 
@@ -175,7 +175,7 @@ class SyncDatasources {
         })
 
         if (datasourcesToUpdate[i].dimensions.length) {
-          console.log(`  ${chalk.blue('-')} Updating datasources dimensions ${datasourcesToUpdate[i].name}...`)
+          console.log(`  ${pc.blue('-')} Updating datasources dimensions ${datasourcesToUpdate[i].name}...`)
           const sourceDimensionsNames = sourceDatasource.dimensions.map((dimension) => dimension.name)
           const targetDimensionsNames = datasourcesToUpdate[i].dimensions.map((dimension) => dimension.name)
           const intersection = sourceDimensionsNames.filter(item => !targetDimensionsNames.includes(item))
@@ -192,14 +192,14 @@ class SyncDatasources {
           await this.syncDatasourceEntries(sourceDatasource.id, datasourcesToUpdate[i].id)
 
           await this.syncDatasourceDimensionsValues(sourceDatasource, datasourceToSyncDimensionsValues)
-          console.log(`${chalk.green('✓')} Updated datasource ${datasourcesToUpdate[i].name}`)
+          console.log(`${pc.green('✓')} Updated datasource ${datasourcesToUpdate[i].name}`)
         } else {
           await this.syncDatasourceEntries(sourceDatasource.id, datasourcesToUpdate[i].id)
-          console.log(`${chalk.green('✓')} Updated datasource ${datasourcesToUpdate[i].name}`)
+          console.log(`${pc.green('✓')} Updated datasource ${datasourcesToUpdate[i].name}`)
         }
       } catch (err) {
         console.error(
-          `${chalk.red('X')} Datasource ${datasourcesToUpdate[i].name} update failed: ${err.message}`
+          `${pc.red('X')} Datasource ${datasourcesToUpdate[i].name} update failed: ${err.message}`
         )
       }
     }
@@ -286,7 +286,7 @@ class SyncDatasources {
 
       await Promise.all(targetEntriesPromisses)
     } catch (error) {
-      console.error(`    ${chalk.red('X')} Sync dimensions values failed: ${error.response.data.error || error.message || error}`)
+      console.error(`    ${pc.red('X')} Sync dimensions values failed: ${error.response.data.error || error.message || error}`)
     }
   }
 
@@ -297,7 +297,7 @@ class SyncDatasources {
         dimension_id: dimensionId
       })
     } catch (error) {
-      console.error(`    ${chalk.red('X')} Sync entry error ${payload.name} sync failed: ${error.response.data.error || error.message}`)
+      console.error(`    ${pc.red('X')} Sync entry error ${payload.name} sync failed: ${error.response.data.error || error.message}`)
     }
   }
 }

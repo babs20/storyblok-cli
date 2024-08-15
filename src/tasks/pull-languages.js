@@ -1,5 +1,5 @@
 import fs from 'fs'
-import chalk from 'chalk'
+import pc from 'picocolors'
 
 /**
  * @method pullLanguages
@@ -20,7 +20,7 @@ const pullLanguages = async (api, options) => {
     const file = `languages.${space}.json`
     const data = JSON.stringify(languages, null, 2)
 
-    console.log(`${chalk.green('✓')} We've saved your languages in the file: ${file}`)
+    console.log(`${pc.green('✓')} We've saved your languages in the file: ${file}`)
 
     fs.writeFile(`./${file}`, data, (err) => {
       if (err) {
@@ -31,7 +31,7 @@ const pullLanguages = async (api, options) => {
       Promise.resolve(file)
     })
   } catch (e) {
-    console.error(`${chalk.red('X')} An error ocurred in pull-languages task when load components data`)
+    console.error(`${pc.red('X')} An error ocurred in pull-languages task when load components data`)
     return Promise.reject(new Error(e))
   }
 }

@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import pc from 'picocolors'
 import lodash from 'lodash'
 import { getPathToFile, checkFileExists, processMigration, getStoriesByComponent, getNameOfMigrationFile, createRollbackFile } from './utils'
 
@@ -57,7 +57,7 @@ const runMigration = async (api, component, field, options = {}) => {
     }
 
     console.log(
-      `${chalk.blue('-')} Getting the user defined migration function`
+      `${pc.blue('-')} Getting the user defined migration function`
     )
     const migrationFn = (await import(pathToFile)).default;
 
@@ -66,12 +66,12 @@ const runMigration = async (api, component, field, options = {}) => {
     }
 
     console.log(
-      `${chalk.blue('-')} Getting stories for ${component} component`
+      `${pc.blue('-')} Getting stories for ${component} component`
     )
     const stories = await getStoriesByComponent(api, component)
 
     if (isEmpty(stories)) {
-      console.log(`${chalk.blue('-')} There are no stories for component ${component}!`)
+      console.log(`${pc.blue('-')} There are no stories for component ${component}!`)
       return Promise.resolve({
         executed: false,
         motive: 'NO_STORIES'
@@ -81,7 +81,7 @@ const runMigration = async (api, component, field, options = {}) => {
     for (const story of stories) {
       try {
         console.log(
-          `${chalk.blue('-')} Processing story ${story.full_slug}`
+          `${pc.blue('-')} Processing story ${story.full_slug}`
         )
         const storyData = await api.getSingleStory(story.id)
         const oldContent = cloneDeep(storyData.content)
@@ -93,7 +93,7 @@ const runMigration = async (api, component, field, options = {}) => {
         // to prevent api unnecessary api executions
         if (!options.isDryrun && isChangeContent) {
           console.log(
-            `${chalk.blue('-')} Updating story ${story.full_slug}`
+            `${pc.blue('-')} Updating story ${story.full_slug}`
           )
           const url = `stories/${story.id}`
 
@@ -127,11 +127,11 @@ const runMigration = async (api, component, field, options = {}) => {
 
           await api.put(url, payload)
           console.log(
-            `${chalk.blue('-')} Story updated with success!`
+            `${pc.blue('-')} Story updated with success!`
           )
         }
       } catch (e) {
-        console.error(`${chalk.red('X')} An error occurred when try to execute migration and update the story: ${e.message}`)
+        console.error(`${pc.red('X')} An error occurred when try to execute migration and update the story: ${e.message}`)
       }
 
       console.log()
@@ -142,7 +142,7 @@ const runMigration = async (api, component, field, options = {}) => {
       await createRollbackFile(rollbackData, component, field)
     }
 
-    console.log(`${chalk.green('✓')} The migration was executed with success!`)
+    console.log(`${pc.green('✓')} The migration was executed with success!`)
     return Promise.resolve({
       executed: true
     })

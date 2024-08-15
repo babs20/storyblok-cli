@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import pc from 'picocolors'
 import axios from 'axios'
 import Storyblok from 'storyblok-js-client'
 import inquirer from 'inquirer'
@@ -131,7 +131,7 @@ export default {
     try {
       if (token && region) {
         await this.loginWithToken({ token, region })
-        console.log(chalk.green('✓') + ' Log in successfully! Token has been added to .netrc file.')
+        console.log(pc.green('✓') + ' Log in successfully! Token has been added to .netrc file.')
         return Promise.resolve({ token, region })
       }
 
@@ -151,17 +151,17 @@ export default {
         await this.loginWithToken(content)
       }
 
-      console.log(chalk.green('✓') + ' Log in successfully! Token has been added to .netrc file.')
+      console.log(pc.green('✓') + ' Log in successfully! Token has been added to .netrc file.')
 
       return Promise.resolve(content)
     } catch (e) {
       if (e.response && e.response.data && e.response.data.error) {
-        console.error(chalk.red('X') + ' An error ocurred when login the user: ' + e.response.data.error)
+        console.error(pc.red('X') + ' An error ocurred when login the user: ' + e.response.data.error)
 
         return Promise.reject(e)
       }
 
-      console.error(chalk.red('X') + ' An error ocurred when login the user')
+      console.error(pc.red('X') + ' An error ocurred when login the user')
       return Promise.reject(e)
     }
   },
@@ -184,7 +184,7 @@ export default {
 
   logout (unauthorized) {
     if (creds.get().email && unauthorized) {
-      console.log(chalk.red('X') + ' Your login seems to be expired, we logged you out. Please log back in again.')
+      console.log(pc.red('X') + ' Your login seems to be expired, we logged you out. Please log back in again.')
     }
     creds.set(null)
   },

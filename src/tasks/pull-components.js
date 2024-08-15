@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import pc from 'picocolors'
 import saveFileFactory from '../utils/save-file-factory'
 
 /**
@@ -47,7 +47,7 @@ const pullComponents = async (api, options) => {
         const data = JSON.stringify(components[comp], null, 2)
         saveFileFactory(compFileName, data, path)
       }
-      console.log(`${chalk.green('✓')} We've saved your components in files with the names of each component`)
+      console.log(`${pc.green('✓')} We've saved your components in files with the names of each component`)
 
       if (presets.length === 0) return
 
@@ -56,14 +56,14 @@ const pullComponents = async (api, options) => {
         const data = JSON.stringify(presets[preset], null, 2)
         saveFileFactory(presetFileName, data, path)
       }
-      console.log(`${chalk.green('✓')} We've saved your presets in files with the names of each preset`)
+      console.log(`${pc.green('✓')} We've saved your presets in files with the names of each preset`)
       return
     }
 
     const file = `components.${fileName}.json`
     const data = JSON.stringify({ components }, null, 2)
 
-    console.log(`${chalk.green('✓')} We've saved your components in the file: ${file}`)
+    console.log(`${pc.green('✓')} We've saved your components in the file: ${file}`)
 
     saveFileFactory(file, data, path)
 
@@ -72,11 +72,11 @@ const pullComponents = async (api, options) => {
     const presetsFile = `presets.${fileName}.json`
     const presetsData = JSON.stringify({ presets }, null, 2)
 
-    console.log(`${chalk.green('✓')} We've saved your presets in the file: ${presetsFile}`)
+    console.log(`${pc.green('✓')} We've saved your presets in the file: ${presetsFile}`)
 
     saveFileFactory(presetsFile, presetsData, path)
   } catch (e) {
-    console.error(`${chalk.red('X')} An error ocurred in pull-components task when load components data`)
+    console.error(`${pc.red('X')} An error ocurred in pull-components task when load components data`)
     return Promise.reject(new Error(e))
   }
 }

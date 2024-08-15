@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import pc from 'picocolors'
 import { convertFile, sendContent, discoverExtension } from './utils'
 
 /**
@@ -17,7 +17,7 @@ const importFiles = async (api, options) => {
   const { file } = options
 
   if (!api) {
-    console.log(chalk.red('X') + 'Api instance is required to make the request')
+    console.log(pc.red('X') + 'Api instance is required to make the request')
     return []
   }
 
@@ -28,7 +28,7 @@ const importFiles = async (api, options) => {
     await sendContent(api, dataFromFile)
   } catch (e) {
     console.log(
-      `${chalk.red('X')} An error ocurrend when process file and send it ${e.message}`
+      `${pc.red('X')} An error ocurrend when process file and send it ${e.message}`
     )
     return Promise.reject(e)
   }

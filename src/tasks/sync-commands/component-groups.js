@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import pc from 'picocolors'
 import { findByProperty } from '../../utils'
 import api from '../../utils/api'
 
@@ -18,7 +18,7 @@ class SyncComponentGroups {
   }
 
   async init () {
-    console.log(`${chalk.green('-')} Syncing component groups...`)
+    console.log(`${pc.green('-')} Syncing component groups...`)
 
     try {
       this.sourceComponentGroups = await this.getComponentGroups(
@@ -31,7 +31,7 @@ class SyncComponentGroups {
       return Promise.resolve(true)
     } catch (e) {
       console.error(
-        `${chalk.red('-')} Error on load components groups from source and target spaces: ${e.message}`
+        `${pc.red('-')} Error on load components groups from source and target spaces: ${e.message}`
       )
       return Promise.reject(e)
     }
@@ -44,7 +44,7 @@ class SyncComponentGroups {
       for (const sourceGroup of this.sourceComponentGroups) {
         console.log()
         console.log(
-          chalk.blue('-') + ` Processing component group ${sourceGroup.name}`
+          pc.blue('-') + ` Processing component group ${sourceGroup.name}`
         )
 
         const targetGroupData = findByProperty(
@@ -59,7 +59,7 @@ class SyncComponentGroups {
 
           try {
             console.log(
-              `${chalk.blue('-')} Creating the ${sourceGroupName} component group`
+              `${pc.blue('-')} Creating the ${sourceGroupName} component group`
             )
             const groupCreated = await this.createComponentGroup(
               this.targetSpaceId,
@@ -69,16 +69,16 @@ class SyncComponentGroups {
             this.targetComponentGroups.push(groupCreated)
 
             console.log(
-              `${chalk.green('✓')} Component group ${sourceGroupName} created`
+              `${pc.green('✓')} Component group ${sourceGroupName} created`
             )
           } catch (e) {
             console.error(
-              `${chalk.red('X')} Component Group ${sourceGroupName} creating failed: ${e.message}`
+              `${pc.red('X')} Component Group ${sourceGroupName} creating failed: ${e.message}`
             )
           }
         } else {
           console.log(
-            `${chalk.green('✓')} Component group ${targetGroupData.name} already exists`
+            `${pc.green('✓')} Component group ${targetGroupData.name} already exists`
           )
         }
       }
@@ -86,7 +86,7 @@ class SyncComponentGroups {
       return this.loadComponentsGroups()
     } catch (e) {
       console.error(
-        `${chalk.red('-')} Error on sync component groups: ${e.message}`
+        `${pc.red('-')} Error on sync component groups: ${e.message}`
       )
       return Promise.reject(e)
     }
@@ -98,7 +98,7 @@ class SyncComponentGroups {
    */
   async getComponentGroups (spaceId) {
     console.log(
-      `${chalk.green('-')} Load component groups from space #${spaceId}`
+      `${pc.green('-')} Load component groups from space #${spaceId}`
     )
 
     return this.client

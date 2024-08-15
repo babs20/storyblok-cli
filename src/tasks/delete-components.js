@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import pc from 'picocolors'
 import axios from 'axios'
 import fs from 'fs'
 import lodash from 'lodash'
@@ -32,7 +32,7 @@ const getDataFromPath = async (path) => {
       return data
     }
   } catch (err) {
-    console.error(`${chalk.red('X')} Can not load json file from ${path}`)
+    console.error(`${pc.red('X')} Can not load json file from ${path}`)
     return Promise.reject(err)
   }
 }
@@ -67,7 +67,7 @@ const deleteComponents = async (api, { source, reversed = false, dryRun = false 
     const spaceComponents = await api.getComponents()
     return deleteComponentsReversed(api, sourceComponents, spaceComponents, dryRun)
   } catch (e) {
-    console.error(`${chalk.red('X')} Can not delete with invalid json - please provide a valid json file`)
+    console.error(`${pc.red('X')} Can not delete with invalid json - please provide a valid json file`)
     return Promise.reject(new Error('Can not delete with invalid json - please provide a valid json file'))
   }
 }
@@ -96,7 +96,7 @@ const deleteAllComponents = async (api, components, dryrun) => {
 const deleteComponentsReversed = async (api, components, spaceComponents, dryrun) => {
   const toDeleteSpaceComponents = spaceComponents
     .filter(spaceComponent => components.findIndex(o => o.name === spaceComponent.name) < 0)
-  console.log(chalk.blue('-') + ' Deleting all components which do not appear in the given source.')
+  console.log(pc.blue('-') + ' Deleting all components which do not appear in the given source.')
   for (const c of toDeleteSpaceComponents) {
     await deleteComponentAndSkip(api, c, dryrun)
   }
@@ -106,7 +106,7 @@ const deleteComponentAndSkip = async (api, c, dryrun) => {
   try {
     return await deleteComponent(api, { comp: c.name, dryrun: dryrun })
   } catch (e) {
-    console.log(chalk.red('-') + ' Error deleting component ' + chalk.blue(c.name) + '! Skipped...')
+    console.log(pc.red('-') + ' Error deleting component ' + pc.blue(c.name) + '! Skipped...')
   }
 }
 

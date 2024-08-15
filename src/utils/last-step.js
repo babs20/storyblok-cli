@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 
 import fs from 'fs'
-import chalk from 'chalk'
+import pc from 'picocolors'
 import ghdownload from 'git-clone'
 import replace from './replace'
 
@@ -46,30 +46,30 @@ const lastStep = answers => {
     const gitRepo = getRepository(type, theme, custom_theme_url)
     const outputDir = './' + name
 
-    console.log(chalk.green('✓') + ' - The github repository ' + gitRepo + ' will be cloned now...')
+    console.log(pc.green('✓') + ' - The github repository ' + gitRepo + ' will be cloned now...')
 
     ghdownload(gitRepo, outputDir, async (err) => {
       if (err) {
         if (err.code === 'ENOTEMPTY') {
-          console.log(chalk.red('  Oh Snap! It seems that you already have a project with the name: ' + name))
+          console.log(pc.red('  Oh Snap! It seems that you already have a project with the name: ' + name))
           reject(new Error('This repository already has been cloned'))
           process.exit(0)
         }
 
-        console.log(chalk.red('X We never had this kind of issue - Sorry for that!'))
-        console.log(chalk.red('X Could you send us the error below as a stackoverflow question?'))
-        console.log(chalk.red('X That would be great! :)'))
-        console.log(chalk.red('X Don\'t forget to mark it with the tag `storyblok` so will can find it.'))
+        console.log(pc.red('X We never had this kind of issue - Sorry for that!'))
+        console.log(pc.red('X Could you send us the error below as a stackoverflow question?'))
+        console.log(pc.red('X That would be great! :)'))
+        console.log(pc.red('X Don\'t forget to mark it with the tag `storyblok` so will can find it.'))
 
         return reject(err)
       } else {
         const finalStep = getFinalStep(type)
 
-        console.log(chalk.green('✓') + ' - ' + chalk.white('Your Storyblok project is ready for you!'))
-        console.log(chalk.white('  Execute the following command to start Storyblok:'))
-        console.log(chalk.cyan('  cd ./' + name + ' && npm install && ' + finalStep))
-        console.log(chalk.white('  If you need more help, just try asking a question on stackoverflow'))
-        console.log(chalk.white('  with the [storyblok] tag or live-chat with us on www.storyblok.com'))
+        console.log(pc.green('✓') + ' - ' + pc.white('Your Storyblok project is ready for you!'))
+        console.log(pc.white('  Execute the following command to start Storyblok:'))
+        console.log(pc.cyan('  cd ./' + name + ' && npm install && ' + finalStep))
+        console.log(pc.white('  If you need more help, just try asking a question on stackoverflow'))
+        console.log(pc.white('  with the [storyblok] tag or live-chat with us on www.storyblok.com'))
 
         try {
           if (type === 'Theme (Storyrenderer/Hosted)' || type === 'quickstart') {
